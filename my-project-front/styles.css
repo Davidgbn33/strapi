@@ -1,0 +1,23 @@
+li {
+  list-style: none;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+}
+input {
+  width: 200px;
+}
+.btn {
+  width: 200px;
+  margin-top: 1rem;
+}
+
+.just-added {
+  font-size: large;
+  color: green;
+}
+.marg {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
