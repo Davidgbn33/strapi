@@ -9,6 +9,7 @@ let allCategory = [];
 const addFoodForm = document.forms.addFood;
 const foodTitle = addFoodForm.foodTitle;
 const expirationDate = addFoodForm.expirationDate;
+const cat = addFoodForm.id_category;
 
 addFoodForm.addEventListener('submit', addFood);
 
@@ -40,7 +41,6 @@ function getFood() {
 
 function renderFood(array) {
   let list = [];
-  console.log(typeof array);
   array.forEach((element) => {
     const dateFR = convertInFrenchString(element.attributes.ExpirationDate);
     const item = `<li id=${element.id} class="marg"><button id=del${element.id}>X</button> ${element.attributes.title} à consommer avant le ${dateFR} </li>`;
@@ -55,11 +55,13 @@ function addFood(e) {
   const title =
     foodTitle.value.trim().charAt(0).toUpperCase() + foodTitle.value.slice(1);
   const date = expirationDate.value;
+  const category = cat.value;
+  console.log(cat.value);
 
   const payload = {
     title,
     ExpirationDate: date,
-    category: 'default',
+    id_category: category,
   };
   fetch(`${url}/fooditems`, {
     method: 'POST',
@@ -73,9 +75,13 @@ function addFood(e) {
       // empty form
       foodTitle.value = '';
       expirationDate.value = '';
+      cat.value = '';
       lastAddedItem = data;
       // retrieve latest food
       getFood();
+      setTimeout(() => {
+        location.reload();
+      }, 3000);
     });
 }
 
@@ -108,6 +114,7 @@ function deleteFoodItem(e) {
   }).then((res) => {
     getFood();
   });
+  location.reload();
 }
 
 function getCategory() {
@@ -133,7 +140,7 @@ function renderCategory(array) {
       index++
     ) {
       const element2 = element.attributes.id_fooditems.data[index];
-      console.log(element2.attributes.title);
+
       const subitem = ` <li>${element2.attributes.title}</li>`;
       listSubitem = [...listSubitem, subitem];
     }
