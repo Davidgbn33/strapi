@@ -5,7 +5,8 @@ li {
   display: flex;
   flex-direction: column;
 }
-input {
+input,
+select {
   width: 200px;
 }
 .btn {
@@ -20,4 +21,8 @@ input {
 .marg {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+}
+.font {
+  font-size: medium;
+  font-weight: bold;
 }

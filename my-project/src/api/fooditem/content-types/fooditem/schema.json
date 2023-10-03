@@ -4,7 +4,8 @@
   "info": {
     "singularName": "fooditem",
     "pluralName": "fooditems",
-    "displayName": "fooditem"
+    "displayName": "fooditem",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -17,8 +18,11 @@
     "ExpirationDate": {
       "type": "date"
     },
-    "category": {
-      "type": "string"
+    "id_category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "id_fooditems"
     }
   }
 }

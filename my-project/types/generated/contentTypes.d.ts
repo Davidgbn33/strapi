@@ -362,12 +362,49 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiCategoryCategory extends Schema.CollectionType {
+  collectionName: 'categories';
+  info: {
+    singularName: 'category';
+    pluralName: 'categories';
+    displayName: 'category';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    id_fooditems: Attribute.Relation<
+      'api::category.category',
+      'oneToMany',
+      'api::fooditem.fooditem'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiFooditemFooditem extends Schema.CollectionType {
   collectionName: 'fooditems';
   info: {
     singularName: 'fooditem';
     pluralName: 'fooditems';
     displayName: 'fooditem';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -375,7 +412,11 @@ export interface ApiFooditemFooditem extends Schema.CollectionType {
   attributes: {
     title: Attribute.String;
     ExpirationDate: Attribute.Date;
-    category: Attribute.String;
+    id_category: Attribute.Relation<
+      'api::fooditem.fooditem',
+      'manyToOne',
+      'api::category.category'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -719,6 +760,7 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::category.category': ApiCategoryCategory;
       'api::fooditem.fooditem': ApiFooditemFooditem;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;

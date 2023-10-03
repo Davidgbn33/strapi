@@ -1,6 +1,9 @@
 const foodDiv = document.querySelector('.food');
+const categoryDiv = document.querySelector('.category');
+
 const url = 'http://localhost:1337/api';
 let allFood = [];
+let allCategory = [];
 
 // récupere le form par id et ensuite les inputs via les id des inputs
 const addFoodForm = document.forms.addFood;
@@ -17,15 +20,15 @@ init();
 
 function init() {
   getFood();
+  getCategory();
 }
 
 function getFood() {
   fetch(`${url}/fooditems?sort=ExpirationDate:ASC`)
     .then((data) => data.json())
-    .then((result) => {
-      allFood = result;
-
-      renderFood(allFood.data);
+    .then((data) => {
+      /* console.log(data.data); */
+      renderFood(data.data);
       if (lastAddedItem !== null) {
         flashLastAddedeItem(lastAddedItem);
       }
@@ -37,6 +40,7 @@ function getFood() {
 
 function renderFood(array) {
   let list = [];
+  console.log(typeof array);
   array.forEach((element) => {
     const dateFR = convertInFrenchString(element.attributes.ExpirationDate);
     const item = `<li id=${element.id} class="marg"><button id=del${element.id}>X</button> ${element.attributes.title} à consommer avant le ${dateFR} </li>`;
@@ -104,4 +108,42 @@ function deleteFoodItem(e) {
   }).then((res) => {
     getFood();
   });
+}
+
+function getCategory() {
+  fetch(`${url}/categories?populate=*`)
+    .then((data) => data.json())
+    .then((result) => {
+      category = result;
+      /* console.log(result); */
+      renderCategory(category.data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+function renderCategory(array) {
+  let list = [];
+  array.forEach((element) => {
+    let listSubitem = [];
+    for (
+      let index = 0;
+      index < element.attributes.id_fooditems.data.length;
+      index++
+    ) {
+      const element2 = element.attributes.id_fooditems.data[index];
+      console.log(element2.attributes.title);
+      const subitem = ` <li>${element2.attributes.title}</li>`;
+      listSubitem = [...listSubitem, subitem];
+    }
+
+    const item = `<li id=${element.id} class="marg font">
+                     ${element.attributes.name} 
+                     <li> ${listSubitem.join('')}</li>
+                     </li> `;
+    list = [...list, item];
+  });
+
+  categoryDiv.innerHTML = `<ul>${list.join('')}</ul>`;
 }
